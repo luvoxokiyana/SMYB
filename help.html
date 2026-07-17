@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Help Center · Brev</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --black: #0a0a0a;
+        --white: #ffffff;
+        --gray-400: #999999;
+        --gray-600: #666666;
+        --gray-800: #2a2a2a;
+        --gray-900: #1a1a1a;
+        --accent: #1e2f6b;
+        --accent-light: #3a5a9f;
+        --radius: 12px;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--black);
+        color: var(--white);
+        min-height: 100vh;
+      }
+
+      .help-container {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 40px 20px 60px;
+      }
+
+      .help-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .help-back {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: transparent;
+        color: var(--gray-400);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+
+      .help-back:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--white);
+      }
+
+      .help-logo {
+        font-size: 24px;
+      }
+
+      .help-title {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+
+      .help-intro {
+        font-size: 14px;
+        color: var(--gray-400);
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      /* FAQ accordion */
+      .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 40px;
+      }
+
+      .faq-item {
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        background: var(--gray-900);
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+      }
+
+      .faq-item:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .faq-question {
+        width: 100%;
+        padding: 18px 20px;
+        background: none;
+        border: none;
+        color: var(--white);
+        font-size: 15px;
+        font-weight: 600;
+        font-family: "Inter", sans-serif;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        transition: color 0.2s ease;
+      }
+
+      .faq-question:hover {
+        color: var(--accent-light);
+      }
+
+      .faq-icon {
+        font-size: 12px;
+        color: var(--gray-600);
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .faq-item.open .faq-icon {
+        transform: rotate(180deg);
+        color: var(--accent-light);
+      }
+
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
+
+      .faq-item.open .faq-answer {
+        max-height: 500px;
+      }
+
+      .faq-answer-inner {
+        padding: 0 20px 18px;
+        font-size: 14px;
+        color: var(--gray-400);
+        line-height: 1.7;
+      }
+
+      .faq-answer-inner a {
+        color: var(--accent-light);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .faq-answer-inner a:hover {
+        text-decoration: underline;
+      }
+
+      .faq-answer-inner ol,
+      .faq-answer-inner ul {
+        padding-left: 20px;
+        margin: 8px 0;
+      }
+
+      .faq-answer-inner li {
+        margin-bottom: 6px;
+      }
+
+      /* Contact section */
+      .help-contact {
+        background: var(--gray-900);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        padding: 24px;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .help-contact h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .help-contact p {
+        font-size: 14px;
+        color: var(--gray-400);
+        margin-bottom: 20px;
+      }
+
+      .help-contact-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 40px;
+        border: none;
+        background: var(--accent);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "Inter", sans-serif;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s ease;
+      }
+
+      .help-contact-btn:hover {
+        background: var(--accent-light);
+      }
+
+      /* Footer */
+      .help-footer {
+        text-align: center;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .help-footer p {
+        font-size: 13px;
+        color: var(--gray-600);
+      }
+
+      .help-footer a {
+        color: var(--gray-400);
+        text-decoration: none;
+        margin: 0 8px;
+        transition: color 0.2s ease;
+      }
+
+      .help-footer a:hover {
+        color: var(--white);
+      }
+
+      @media (max-width: 480px) {
+        .help-container {
+          padding: 24px 16px 40px;
+        }
+        .help-title {
+          font-size: 20px;
+        }
+        .faq-question {
+          font-size: 14px;
+          padding: 16px 18px;
+        }
+        .faq-answer-inner {
+          padding: 0 18px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="help-container">
+      <!-- Header -->
+      <div class="help-header">
+        <a href="index.html" class="help-back" aria-label="Back to Brev">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <span class="help-logo">🍸</span>
+        <h1 class="help-title">Help Center</h1>
+      </div>
+
+      <p class="help-intro">
+        Find answers to common questions about using Brev. Can't find what you're looking for? 
+        <a href="mailto:help@brev.app" style="color:var(--accent-light);font-weight:600;">Contact us</a>.
+      </p>
+
+      <!-- FAQ -->
+      <div class="faq-list">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            What is Brev?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Brev is a social app for discovering and sharing nightlife. Post photos of where you're drinking, 
+                tag venues, and see what's happening around you. Think of it as Instagram Stories meets a venue discovery app.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do I create a post?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Tap the camera button in the bottom navigation bar, then:</p>
+              <ol>
+                <li>Take a photo or choose one from your gallery</li>
+                <li>Add a caption (optional, up to 200 characters)</li>
+                <li>Tag a venue (optional)</li>
+                <li>Tap the send button to post</li>
+              </ol>
+              <p>Your post will appear in the feed immediately.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            Can I use Brev without signing up?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Yes! You can <strong>browse as a guest</strong> to view posts and explore venues. 
+                However, you'll need to create an account to post, like, or comment.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do I edit my profile?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>There are two ways to edit your profile:</p>
+              <ul>
+                <li>Go to your <strong>Profile</strong> tab and tap the "Edit Profile" button</li>
+                <li>Or tap the <strong>gear icon ⚙️</strong> on your profile, then select "Edit Profile"</li>
+              </ul>
+              <p>You can update your name, username, and bio. Avatar uploads coming soon!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do likes and comments work?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                While viewing a post, tap the <strong>heart ❤️</strong> to like it. Tap again to unlike. 
+                Tap the <strong>comment 💬</strong> button to view and add comments. 
+                You must be signed in to like or comment.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do I delete my post or comment?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Post and comment deletion is coming in the next update. For now, if you need something removed, 
+                email us at <a href="mailto:help@brev.app">help@brev.app</a> and we'll take care of it within 24 hours.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 7 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do I delete my account?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Email <a href="mailto:privacy@brev.app">privacy@brev.app</a> from the email associated with your account 
+                requesting deletion. We'll remove all your data within 30 days.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 8 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            I forgot my password. What do I do?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Password reset is handled by our authentication provider. 
+                Email <a href="mailto:help@brev.app">help@brev.app</a> with your account email 
+                and we'll send you a reset link within 24 hours.
+              </p>
+              <p style="margin-top:8px;">
+                In-app password reset is coming soon!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 9 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            Why was my content removed?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Content that violates our <a href="terms.html">Terms of Service</a> may be removed. 
+                This includes nudity, hate speech, harassment, illegal content, and spam. 
+                If you believe your content was removed in error, contact <a href="mailto:help@brev.app">help@brev.app</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 10 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            Is Brev available in my country?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                Brev is available worldwide! As long as you have an internet connection, you can use Brev. 
+                The app is currently in English. Additional language support may come in the future.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 11 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            What information does Brev collect?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                We collect minimal data to make Brev work — your email, username, posts, and basic usage data. 
+                We never sell your data or track your precise location. 
+                See our full <a href="privacy.html">Privacy Policy</a> for details.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 12 -->
+        <div class="faq-item">
+          <button class="faq-question">
+            How do I report a problem or abusive user?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>
+                If you encounter harassment, inappropriate content, or technical issues, email 
+                <a href="mailto:help@brev.app">help@brev.app</a>. 
+                Please include screenshots if possible. We take all reports seriously and respond within 48 hours.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="help-contact">
+        <h2>Still need help?</h2>
+        <p>Our team is here to assist you. We typically respond within 24 hours.</p>
+        <a href="mailto:help@brev.app" class="help-contact-btn">
+          <i class="fa-solid fa-envelope"></i> Email Support
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div class="help-footer">
+        <p>
+          <a href="index.html">Brev</a> · 
+          <a href="terms.html">Terms of Service</a> · 
+          <a href="privacy.html">Privacy Policy</a> · 
+          <a href="help.html">Help Center</a>
+        </p>
+        <p style="margin-top: 8px;">&copy; 2025 Brev. All rights reserved.</p>
+      </div>
+    </div>
+
+    <script>
+      // FAQ accordion
+      document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+          const item = button.parentElement;
+          const isOpen = item.classList.contains('open');
+          
+          // Close all others
+          document.querySelectorAll('.faq-item.open').forEach(openItem => {
+            if (openItem !== item) openItem.classList.remove('open');
+          });
+          
+          // Toggle current
+          item.classList.toggle('open', !isOpen);
+        });
+      });
+    </script>
+  </body>
+</html>
