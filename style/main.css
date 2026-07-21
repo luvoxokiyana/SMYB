@@ -71,7 +71,7 @@ body {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--status-height) 0 calc(var(--nav-height) + var(--safe-bottom) + 12px);
+   padding: 0 0 calc(var(--nav-height) + var(--safe-bottom) + 12px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
