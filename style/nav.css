@@ -1,0 +1,119 @@
+/* ────────── BOTTOM NAV ────────── */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 40;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.15s ease;
+  position: relative;
+  font-family: "Inter", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item i {
+  font-size: 22px;
+  color: currentColor;
+  transition: color 0.15s ease;
+}
+
+.nav-item.active { color: var(--white); }
+
+.nav-item .label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  margin-top: 1px;
+}
+
+.nav-item.active .label { color: var(--white); }
+
+.nav-item.camera-btn {
+  position: relative;
+  top: -12px;
+}
+
+.nav-item.camera-btn .camera-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px var(--accent-glow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nav-item.camera-btn .camera-ring i {
+  font-size: 24px;
+  color: var(--white);
+}
+
+.nav-item.camera-btn:active .camera-ring {
+  transform: scale(0.92);
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+
+/* ────────── TOAST ────────── */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  padding: 14px 28px;
+  border-radius: 40px;
+  background: var(--gray-900);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-width: 90%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: pre-line;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success {
+  border-color: rgba(0, 230, 118, 0.3);
+}
+
+.toast.error {
+  border-color: rgba(255, 23, 68, 0.3);
+}

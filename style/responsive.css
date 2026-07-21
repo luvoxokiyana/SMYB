@@ -1,0 +1,23 @@
+/* ────────── RESPONSIVE ────────── */
+@media (max-width: 430px) {
+  .preview-caption-input { font-size: 16px; padding: 8px 44px 8px 0; }
+  .preview-bottom { padding: 16px 14px 40px; }
+  .camera-bottom { bottom: 30px; padding: 0 16px; }
+  .capture-ring { width: 64px; height: 64px; }
+  .capture-inner { width: 52px; height: 52px; }
+  .story-caption { font-size: 15px; }
+  .story-name { font-size: 14px; }
+  .profile-header { gap: 14px; }
+  .profile-avatar-large { width: 68px; height: 68px; font-size: 26px; }
+  .profile-stats .stat .num { font-size: 17px; }
+}
+
+@media (min-width: 431px) {
+  .preview-container { border-radius: 12px; max-height: 90vh; aspect-ratio: 9 / 16; }
+  .camera-container { max-height: 90vh; aspect-ratio: 9 / 16; border-radius: 12px; }
+  .app { 
+    border-left: 1px solid rgba(255, 255, 255, 0.04); 
+    border-right: 1px solid rgba(255, 255, 255, 0.04); 
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8); 
+  }
+}

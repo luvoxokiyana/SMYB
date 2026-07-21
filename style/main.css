@@ -1,0 +1,140 @@
+/* ────────── RESET & BASE ────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #1e2f6b;
+  --accent-hover: #2a3f7f;
+  --accent-light: #3a5a9f;
+  --accent-glow: rgba(30, 47, 107, 0.35);
+  --accent-muted: rgba(30, 47, 107, 0.15);
+  --black: #0a0a0a;
+  --black-card: #141414;
+  --white: #ffffff;
+  --gray-400: #999999;
+  --gray-500: #888888;
+  --gray-600: #666666;
+  --gray-800: #2a2a2a;
+  --gray-900: #1a1a1a;
+  --red: #ff4444;
+  --radius: 16px;
+  --nav-height: 72px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --status-height: 44px;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ────────── APP CONTAINER ────────── */
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ────────── APP MAIN WRAPPER ────────── */
+.app-main {
+  display: none;
+}
+
+.app-main.active {
+  display: block;
+}
+
+/* ────────── SCROLLBAR ────────── */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+/* ────────── PAGE SYSTEM ────────── */
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--status-height) 0 calc(var(--nav-height) + var(--safe-bottom) + 12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.page::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.page .status-bar-fake {
+  height: var(--status-height);
+  flex-shrink: 0;
+}
+
+/* ────────── LOGO ────────── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  color: var(--white);
+  text-decoration: none;
+}
+
+.logo .mark {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--white);
+  transform: rotate(-4deg);
+  flex-shrink: 0;
+}
+
+/* ────────── PAGE HEADERS ────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 16px;
+  flex-shrink: 0;
+}
+
+.page-header .title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.page-header .title .accent {
+  color: var(--accent);
+}

@@ -2,33 +2,63 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Brev · discover the night</title>
-    
-    <!-- UPDATED CSP - Allows all required resources -->
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'self';
-      connect-src 'self' https://*.supabase.co https://api.cloudinary.com https://nominatim.openstreetmap.org https://plausible.io;
-      img-src 'self' data: https://res.cloudinary.com https://*.cloudinary.com https://images.unsplash.com https://*.unsplash.com https://plus.unsplash.com;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-      font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
-      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://plausible.io;
-      frame-src 'none';
-      base-uri 'self';
-      form-action 'self';
-    ">
-    
+
+    <!-- CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+  default-src 'self';
+  connect-src 'self' data: https://*.supabase.co https://api.cloudinary.com https://nominatim.openstreetmap.org https://plausible.io;
+  img-src 'self' data: https://res.cloudinary.com https://*.cloudinary.com https://images.unsplash.com https://*.unsplash.com https://plus.unsplash.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+  font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
+  script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://plausible.io;
+  frame-src 'none';
+  base-uri 'self';
+  form-action 'self';
+"
+    />
+
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍸</text></svg>" />
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍸</text></svg>"
+    />
+
+    <!-- OG Tags -->
     <meta property="og:title" content="Brev · discover the night" />
-    <meta property="og:description" content="Share where you drink. Discover the night." />
+    <meta
+      property="og:description"
+      content="Share where you drink. Discover the night."
+    />
     <meta name="theme-color" content="#0a0a0a" />
-    
-    <link rel="stylesheet" href="style.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style/main.css" />
+    <link rel="stylesheet" href="style/auth.css" />
+    <link rel="stylesheet" href="style/feed.css" />
+    <link rel="stylesheet" href="style/search.css" />
+    <link rel="stylesheet" href="style/venues.css" />
+    <link rel="stylesheet" href="style/profile.css" />
+    <link rel="stylesheet" href="style/modals.css" />
+    <link rel="stylesheet" href="style/nav.css" />
+    <link rel="stylesheet" href="style/responsive.css" />
   </head>
   <body>
     <!-- ═══ LOADING SCREEN ═══ -->
@@ -36,7 +66,9 @@
       <div class="loading-content">
         <div class="loading-logo">🍸</div>
         <h1 class="loading-app-name">Brev</h1>
-        <div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        <div class="loading-spinner">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
       </div>
     </div>
 
@@ -56,101 +88,239 @@
             <label class="auth-label" for="signUpFullName">Full Name</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-user auth-input-icon"></i>
-              <input type="text" id="signUpFullName" placeholder="Jake D." required autocomplete="name" />
+              <input
+                type="text"
+                id="signUpFullName"
+                placeholder="Jake D."
+                required
+                autocomplete="name"
+              />
             </div>
           </div>
           <div class="auth-input-group">
             <label class="auth-label" for="signUpUsername">Username</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-at auth-input-icon"></i>
-              <input type="text" id="signUpUsername" placeholder="jakedrinks" required minlength="3" autocomplete="username" />
+              <input
+                type="text"
+                id="signUpUsername"
+                placeholder="jakedrinks"
+                required
+                minlength="3"
+                autocomplete="username"
+              />
             </div>
           </div>
           <div class="auth-input-group">
             <label class="auth-label" for="signUpEmail">Email</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-envelope auth-input-icon"></i>
-              <input type="email" id="signUpEmail" placeholder="jake@email.com" required autocomplete="email" />
+              <input
+                type="email"
+                id="signUpEmail"
+                placeholder="jake@email.com"
+                required
+                autocomplete="email"
+              />
             </div>
           </div>
           <div class="auth-input-group">
             <label class="auth-label" for="signUpPassword">Password</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-lock auth-input-icon"></i>
-              <input type="password" id="signUpPassword" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password" />
-              <button type="button" class="auth-password-toggle" data-target="signUpPassword"><i class="fa-regular fa-eye"></i></button>
+              <input
+                type="password"
+                id="signUpPassword"
+                placeholder="At least 6 characters"
+                required
+                minlength="6"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                class="auth-password-toggle"
+                data-target="signUpPassword"
+              >
+                <i class="fa-regular fa-eye"></i>
+              </button>
             </div>
             <span class="auth-hint">6+ characters</span>
           </div>
           <button type="submit" class="auth-submit-btn" id="signUpBtn">
             <span class="btn-text">Create Account</span>
-            <span class="btn-loader" style="display:none"><i class="fa-solid fa-spinner fa-spin"></i> Creating...</span>
+            <span class="btn-loader" style="display: none"
+              ><i class="fa-solid fa-spinner fa-spin"></i> Creating...</span
+            >
           </button>
         </form>
 
         <!-- Sign In -->
-        <form class="auth-form" id="signInForm" style="display:none" autocomplete="off">
+        <form
+          class="auth-form"
+          id="signInForm"
+          style="display: none"
+          autocomplete="off"
+        >
           <h2 class="auth-form-title">Welcome back</h2>
           <div class="auth-input-group">
             <label class="auth-label" for="signInEmail">Email</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-envelope auth-input-icon"></i>
-              <input type="email" id="signInEmail" placeholder="jake@email.com" required autocomplete="email" />
+              <input
+                type="email"
+                id="signInEmail"
+                placeholder="jake@email.com"
+                required
+                autocomplete="email"
+              />
             </div>
           </div>
           <div class="auth-input-group">
             <label class="auth-label" for="signInPassword">Password</label>
             <div class="auth-input-wrapper">
               <i class="fa-solid fa-lock auth-input-icon"></i>
-              <input type="password" id="signInPassword" placeholder="Your password" required autocomplete="current-password" />
-              <button type="button" class="auth-password-toggle" data-target="signInPassword"><i class="fa-regular fa-eye"></i></button>
+              <input
+                type="password"
+                id="signInPassword"
+                placeholder="Your password"
+                required
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="auth-password-toggle"
+                data-target="signInPassword"
+              >
+                <i class="fa-regular fa-eye"></i>
+              </button>
             </div>
           </div>
           <button type="submit" class="auth-submit-btn" id="signInBtn">
             <span class="btn-text">Sign In</span>
-            <span class="btn-loader" style="display:none"><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span>
+            <span class="btn-loader" style="display: none"
+              ><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span
+            >
           </button>
         </form>
 
         <!-- Email Confirmation -->
-        <div class="auth-form" id="emailConfirmation" style="display:none">
-          <div style="text-align:center;padding:10px 0;">
-            <div style="font-size:56px;margin-bottom:20px;">📧</div>
-            <h2 style="font-size:22px;font-weight:700;margin-bottom:12px;color:var(--white);">Check Your Email</h2>
-            <p style="font-size:14px;color:var(--gray-400);margin-bottom:8px;">We've sent a confirmation link to</p>
-            <p style="font-size:16px;font-weight:600;color:var(--white);margin-bottom:20px;word-break:break-all;" id="confirmEmailAddress"></p>
-            <p style="font-size:13px;color:var(--gray-400);margin-bottom:24px;">Click the link in the email to verify your account. Check spam if you don't see it.</p>
-            <button class="auth-submit-btn" id="backToSignInFromConfirm" style="margin-bottom:10px;"><span class="btn-text">Back to Sign In</span></button>
-            <button class="auth-submit-btn secondary" id="resendConfirmation" style="background:var(--gray-800);">
+        <div class="auth-form" id="emailConfirmation" style="display: none">
+          <div style="text-align: center; padding: 10px 0">
+            <div style="font-size: 56px; margin-bottom: 20px">📧</div>
+            <h2
+              style="
+                font-size: 22px;
+                font-weight: 700;
+                margin-bottom: 12px;
+                color: var(--white);
+              "
+            >
+              Check Your Email
+            </h2>
+            <p
+              style="
+                font-size: 14px;
+                color: var(--gray-400);
+                margin-bottom: 8px;
+              "
+            >
+              We've sent a confirmation link to
+            </p>
+            <p
+              style="
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--white);
+                margin-bottom: 20px;
+                word-break: break-all;
+              "
+              id="confirmEmailAddress"
+            ></p>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--gray-400);
+                margin-bottom: 24px;
+              "
+            >
+              Click the link in the email to verify your account. Check spam if
+              you don't see it.
+            </p>
+            <button
+              class="auth-submit-btn"
+              id="backToSignInFromConfirm"
+              style="margin-bottom: 10px"
+            >
+              <span class="btn-text">Back to Sign In</span>
+            </button>
+            <button
+              class="auth-submit-btn secondary"
+              id="resendConfirmation"
+              style="background: var(--gray-800)"
+            >
               <span class="btn-text">Resend Email</span>
-              <span class="btn-loader" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Sending...</span>
+              <span class="btn-loader" style="display: none"
+                ><i class="fa-solid fa-spinner fa-spin"></i> Sending...</span
+              >
             </button>
           </div>
         </div>
 
         <!-- Toggle -->
-        <div class="auth-switch" id="authSwitchSignUp">Already have an account? <a id="showSignIn">Sign in</a></div>
-        <div class="auth-switch" id="authSwitchSignIn" style="display:none">Don't have an account? <a id="showSignUp">Create one</a></div>
-        <div class="auth-guest"><span>Just looking?</span><a id="guestBrowse">Browse as guest</a></div>
+        <div class="auth-switch" id="authSwitchSignUp">
+          Already have an account? <a id="showSignIn">Sign in</a>
+        </div>
+        <div class="auth-switch" id="authSwitchSignIn" style="display: none">
+          Don't have an account? <a id="showSignUp">Create one</a>
+        </div>
+        <div class="auth-guest">
+          <span>Just looking?</span><a id="guestBrowse">Browse as guest</a>
+        </div>
       </div>
     </div>
 
     <!-- ═══ MAIN APP ═══ -->
     <div class="app-main" id="appMain">
       <div class="app">
-
         <!-- CAMERA MODAL -->
         <div class="camera-modal" id="cameraModal">
           <div class="camera-container">
-            <video class="camera-feed" id="cameraFeed" autoplay playsinline></video>
-            <img class="camera-preview" id="cameraPreview" style="display:none" />
-            <div class="camera-top"><div></div><button class="camera-flash" id="cameraFlash"><i class="fa-solid fa-bolt-lightning"></i></button></div>
-            <div class="camera-bottom">
-              <button class="camera-gallery" id="cameraGallery"><i class="fa-regular fa-image"></i><span>Gallery</span></button>
-              <button class="camera-capture" id="cameraCapture"><div class="capture-ring"><div class="capture-inner"></div></div></button>
-              <button class="camera-flip" id="cameraFlip"><i class="fa-solid fa-arrows-rotate"></i></button>
+            <video
+              class="camera-feed"
+              id="cameraFeed"
+              autoplay
+              playsinline
+            ></video>
+            <img
+              class="camera-preview"
+              id="cameraPreview"
+              style="display: none"
+            />
+            <div class="camera-top">
+              <div></div>
+              <button class="camera-flash" id="cameraFlash">
+                <i class="fa-solid fa-bolt-lightning"></i>
+              </button>
             </div>
-            <input type="file" id="galleryInput" accept="image/*" style="display:none" />
+            <div class="camera-bottom">
+              <button class="camera-gallery" id="cameraGallery">
+                <i class="fa-regular fa-image"></i><span>Gallery</span>
+              </button>
+              <button class="camera-capture" id="cameraCapture">
+                <div class="capture-ring">
+                  <div class="capture-inner"></div>
+                </div>
+              </button>
+              <button class="camera-flip" id="cameraFlip">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="galleryInput"
+              accept="image/*"
+              style="display: none"
+            />
           </div>
         </div>
 
@@ -203,7 +373,11 @@
                     placeholder="Add venue..."
                     autocomplete="off"
                   />
-                  <div class="venue-suggestions" id="venueSuggestions" style="display:none;"></div>
+                  <div
+                    class="venue-suggestions"
+                    id="venueSuggestions"
+                    style="display: none"
+                  ></div>
                 </div>
                 <div class="preview-name-wrap">
                   <div class="preview-avatar" id="previewAvatar">JD</div>
@@ -223,14 +397,24 @@
         <div class="comments-modal" id="commentsModal">
           <div class="comments-container">
             <div class="comments-header">
-              <button class="comments-close" id="commentsClose"><i class="fa-solid fa-times"></i></button>
+              <button class="comments-close" id="commentsClose">
+                <i class="fa-solid fa-times"></i>
+              </button>
               <h3 class="comments-title">Comments</h3>
-              <div style="width:32px;"></div>
+              <div style="width: 32px"></div>
             </div>
             <div class="comments-list" id="commentsList"></div>
             <div class="comments-input-container">
-              <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment..." maxlength="500" />
-              <button class="comment-submit" id="commentSubmit"><i class="fa-solid fa-paper-plane"></i></button>
+              <input
+                type="text"
+                class="comment-input"
+                id="commentInput"
+                placeholder="Add a comment..."
+                maxlength="500"
+              />
+              <button class="comment-submit" id="commentSubmit">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -239,14 +423,24 @@
         <div class="venue-profile-modal" id="venueProfileModal">
           <div class="venue-profile-container">
             <div class="venue-profile-header">
-              <button class="venue-profile-back" id="venueProfileBack"><i class="fa-solid fa-arrow-left"></i></button>
+              <button class="venue-profile-back" id="venueProfileBack">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
               <h3 class="venue-profile-title" id="venueProfileTitle">Venue</h3>
-              <button class="venue-profile-save" id="venueProfileSave"><i class="fa-regular fa-bookmark"></i></button>
+              <button class="venue-profile-save" id="venueProfileSave">
+                <i class="fa-regular fa-bookmark"></i>
+              </button>
             </div>
             <div class="venue-profile-body">
               <div class="venue-profile-stats">
-                <div class="vp-stat"><span class="vp-num" id="vpPostCount">0</span><span class="vp-label">Posts</span></div>
-                <div class="vp-stat"><span class="vp-num" id="vpFollowerCount">0</span><span class="vp-label">Followers</span></div>
+                <div class="vp-stat">
+                  <span class="vp-num" id="vpPostCount">0</span
+                  ><span class="vp-label">Posts</span>
+                </div>
+                <div class="vp-stat">
+                  <span class="vp-num" id="vpFollowerCount">0</span
+                  ><span class="vp-label">Followers</span>
+                </div>
               </div>
               <div class="venue-profile-address" id="venueProfileAddress"></div>
               <div class="venue-profile-posts-label">Recent Posts</div>
@@ -264,20 +458,48 @@
         <div class="page" id="search">
           <div class="status-bar-fake"></div>
           <div class="page-header">
-            <div class="logo"><div class="mark">#</div><span>Brev</span></div>
+            <div class="logo">
+              <div class="mark">#</div>
+              <span>Brev</span>
+            </div>
           </div>
+
           <div class="search-input-wrap">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input class="search-input" type="text" placeholder="Search venues, people..." />
+            <input
+              class="search-input"
+              type="text"
+              placeholder="Search venues, people..."
+            />
           </div>
-          <div class="search-suggestions-label">Suggested Venues</div>
-          <div class="search-grid" id="searchGrid"></div>
+
+          <!-- ✅ Search Tabs -->
+          <div class="search-tabs">
+            <button class="search-tab active" data-search-tab="venues">
+              Venues
+            </button>
+            <button class="search-tab" data-search-tab="people">People</button>
+          </div>
+
+          <!-- Venue results -->
+          <div id="venueSearchResults">
+            <div class="search-suggestions-label">Suggested Venues</div>
+            <div class="search-grid" id="searchGrid"></div>
+          </div>
+
+          <!-- User results -->
+          <div id="userSearchResults" style="display: none">
+            <div class="search-suggestions-label">People</div>
+            <div id="userResultsList"></div>
+          </div>
         </div>
 
         <!-- ═══ PAGE: VENUES ═══ -->
         <div class="page" id="venues">
           <div class="status-bar-fake"></div>
-          <div class="page-header"><span class="title">Nearby <span class="accent">Venues</span></span></div>
+          <div class="page-header">
+            <span class="title">Nearby <span class="accent">Venues</span></span>
+          </div>
           <div class="venue-list" id="venueList"></div>
         </div>
 
@@ -288,36 +510,67 @@
             <div class="profile-header">
               <div class="profile-avatar-large" id="profileAvatar">U</div>
               <div class="profile-stats">
-                <div class="stat"><span class="num" id="statFollowers">0</span><span class="label">Followers</span></div>
-                <div class="stat"><span class="num" id="statFollowing">0</span><span class="label">Following</span></div>
+                <div class="stat">
+                  <span class="num" id="statFollowers">0</span
+                  ><span class="label">Followers</span>
+                </div>
+                <div class="stat">
+                  <span class="num" id="statFollowing">0</span
+                  ><span class="label">Following</span>
+                </div>
               </div>
-              <button class="profile-settings-btn" id="profileSettingsBtn"><i class="fa-solid fa-gear"></i></button>
+              <button class="profile-settings-btn" id="profileSettingsBtn">
+                <i class="fa-solid fa-gear"></i>
+              </button>
             </div>
             <div class="profile-name" id="profileName">User</div>
             <div class="profile-handle" id="profileHandle">@user</div>
             <div class="profile-bio" id="profileBio"></div>
-            <button class="edit-profile-btn" id="editProfileBtn"><i class="fa-solid fa-pen"></i> Edit Profile</button>
-            
+            <button class="edit-profile-btn" id="editProfileBtn">
+              <i class="fa-solid fa-pen"></i> Edit Profile
+            </button>
+
             <!-- Profile Tabs -->
             <div class="profile-tabs" id="profileTabs">
-              <button class="profile-tab active" data-tab="posts"><i class="fa-solid fa-grid-2"></i> Posts</button>
-              <button class="profile-tab" data-tab="venues"><i class="fa-solid fa-bookmark"></i> Saved</button>
+              <button class="profile-tab active" data-tab="posts">
+                <i class="fa-solid fa-grid-2"></i> Posts
+              </button>
+              <button class="profile-tab" data-tab="venues">
+                <i class="fa-solid fa-bookmark"></i> Saved
+              </button>
             </div>
-            
+
             <div class="profile-post-grid" id="profilePostGrid"></div>
-            <div class="profile-venues-grid" id="profileVenuesGrid" style="display:none;"></div>
-            <div style="height:12px"></div>
+            <div
+              class="profile-venues-grid"
+              id="profileVenuesGrid"
+              style="display: none"
+            ></div>
+            <div style="height: 12px"></div>
           </div>
         </div>
 
         <!-- Settings dropdown -->
         <div class="settings-dropdown" id="settingsDropdown">
-          <button class="settings-item" id="settingsEditProfile"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</button>
-          <button class="settings-item" id="settingsSaved"><i class="fa-solid fa-bookmark"></i> Saved Venues</button>
-          <button class="settings-item" id="settingsHelp"><i class="fa-solid fa-circle-question"></i> Help</button>
-          <button class="settings-item" id="settingsPrivacy"><i class="fa-solid fa-user-shield"></i> Privacy Center</button>
+          <button class="settings-item" id="settingsEditProfile">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+          </button>
+          <button class="settings-item" id="settingsSaved">
+            <i class="fa-solid fa-bookmark"></i> Saved Venues
+          </button>
+          <button class="settings-item" id="settingsHelp">
+            <i class="fa-solid fa-circle-question"></i> Help
+          </button>
+          <button class="settings-item" id="settingsPrivacy">
+            <i class="fa-solid fa-user-shield"></i> Privacy Center
+          </button>
           <div class="settings-divider"></div>
-          <button class="settings-item settings-item-danger" id="settingsLogout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+          <button
+            class="settings-item settings-item-danger"
+            id="settingsLogout"
+          >
+            <i class="fa-solid fa-right-from-bracket"></i> Log Out
+          </button>
         </div>
 
         <!-- Toast -->
@@ -325,11 +578,24 @@
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav" id="bottomNav">
-          <button class="nav-item active" data-page="home"><i class="fa-solid fa-house"></i><span class="label">Home</span></button>
-          <button class="nav-item" data-page="search"><i class="fa-solid fa-magnifying-glass"></i><span class="label">Search</span></button>
-          <button class="nav-item camera-btn" data-page="camera"><div class="camera-ring"><i class="fa-solid fa-camera"></i></div><span class="label">Post</span></button>
-          <button class="nav-item" data-page="venues"><i class="fa-solid fa-location-dot"></i><span class="label">Venues</span></button>
-          <button class="nav-item" data-page="profile"><i class="fa-solid fa-user"></i><span class="label">Profile</span></button>
+          <button class="nav-item active" data-page="home">
+            <i class="fa-solid fa-house"></i><span class="label">Home</span>
+          </button>
+          <button class="nav-item" data-page="search">
+            <i class="fa-solid fa-magnifying-glass"></i
+            ><span class="label">Search</span>
+          </button>
+          <button class="nav-item camera-btn" data-page="camera">
+            <div class="camera-ring"><i class="fa-solid fa-camera"></i></div>
+            <span class="label">Post</span>
+          </button>
+          <button class="nav-item" data-page="venues">
+            <i class="fa-solid fa-location-dot"></i
+            ><span class="label">Venues</span>
+          </button>
+          <button class="nav-item" data-page="profile">
+            <i class="fa-solid fa-user"></i><span class="label">Profile</span>
+          </button>
         </nav>
       </div>
     </div>
@@ -338,20 +604,86 @@
     <div class="edit-profile-modal" id="editProfileModal">
       <div class="edit-profile-container">
         <div class="edit-profile-header">
-          <button class="edit-profile-cancel" id="editProfileCancel">Cancel</button>
+          <button class="edit-profile-cancel" id="editProfileCancel">
+            Cancel
+          </button>
           <h3>Edit Profile</h3>
           <button class="edit-profile-save" id="saveProfileBtn">Save</button>
         </div>
         <div class="edit-profile-body">
-          <div class="edit-avatar"><div class="edit-avatar-placeholder" id="editAvatarPreview">U</div><button class="edit-avatar-btn" id="editAvatarBtn"><i class="fa-solid fa-camera"></i></button></div>
-          <div class="edit-field"><label>Full Name</label><input type="text" id="editFullName" placeholder="Your name" maxlength="50" /></div>
-          <div class="edit-field"><label>Username</label><input type="text" id="editUsername" placeholder="username" maxlength="30" /></div>
-          <div class="edit-field"><label>Bio</label><textarea id="editBio" placeholder="Tell people about yourself..." maxlength="150" rows="3"></textarea><span class="edit-bio-count">0/150</span></div>
+          <div class="edit-avatar">
+            <div class="edit-avatar-placeholder" id="editAvatarPreview">U</div>
+            <button class="edit-avatar-btn" id="editAvatarBtn">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+          <div class="edit-field">
+            <label>Full Name</label
+            ><input
+              type="text"
+              id="editFullName"
+              placeholder="Your name"
+              maxlength="50"
+            />
+          </div>
+          <div class="edit-field">
+            <label>Username</label
+            ><input
+              type="text"
+              id="editUsername"
+              placeholder="username"
+              maxlength="30"
+            />
+          </div>
+          <div class="edit-field">
+            <label>Bio</label
+            ><textarea
+              id="editBio"
+              placeholder="Tell people about yourself..."
+              maxlength="150"
+              rows="3"
+            ></textarea
+            ><span class="edit-bio-count">0/150</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="main.js"></script>
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- JAVASCRIPT MODULES -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<!-- Step 1: Config (must be first) -->
+<script src="/js/config.js"></script>
+
+<!-- Step 2: Utilities & Helpers -->
+<script src="/js/state.js"></script>
+<script src="/js/rate-limiter.js"></script>
+<script src="/js/utils.js"></script>
+
+<!-- Step 3: Session & Auth -->
+<script src="/js/session.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/auth-ui.js"></script>
+
+<!-- Step 4: API Services -->
+<script src="/js/venues-api.js"></script>
+<script src="/js/posts.js"></script>
+
+<!-- Step 5: Features -->
+<script src="/js/camera.js"></script>
+<script src="/js/feed.js"></script>
+<script src="/js/story-navigation.js"></script>
+<script src="/js/post-preview.js"></script>
+<script src="/js/comments.js"></script>
+<script src="/js/venue-profile.js"></script>
+<script src="/js/pages.js"></script>
+<script src="/js/settings.js"></script>
+
+<!-- Step 5.5: Onboarding (new) -->
+<script src="/js/onboarding.js"></script>
+
+<!-- Step 6: App Initialization (must be last) -->
+<script src="/js/init.js"></script>  
   </body>
 </html>
