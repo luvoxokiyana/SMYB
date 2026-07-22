@@ -5,6 +5,58 @@
 function initStoryNavigation() {
   const container = document.querySelector('.feed-container');
   if (!container) return;
+
+  // track press/hold state
+  let pressHoldTimer = null;
+  let isHolding = false;
+
+  // add event listeners for press and hold
+  container.addEventListener('mousedown', function(e) {
+    // start timer
+    pressHoldTimer = setTimeout(() => {
+      isHolding = true;
+      clearAutoTimer(); //stops the auto scroll
+    }, 300); //300ms = press and hold
+  });
+
+  container.addEventListener('mouseup', function(e) {
+    if (pressHoldTimer) {
+      clearTimeout(pressHoldTimer);
+      pressHoldTimer = null
+    }
+    if (isHolding) {
+      resetAutoTimer(); // Resume auto scroll
+    }
+  })
+
+  container.addEventListener('mouseleave', function(e) {
+     if (pressHoldTimer) {
+      clearTimeout(pressHoldTimer);
+      pressHoldTimer = null
+    }
+    if (isHolding) {
+      resetAutoTimer(); // Resume auto scroll
+    }
+  })
+
+    // add event listeners for press and hold (mobile)
+  container.addEventListener('touchstart', function(e) {
+    // start timer
+    pressHoldTimer = setTimeout(() => {
+      isHolding = true;
+      clearAutoTimer(); //stops the auto scroll
+    }, 300); //300ms = press and hold
+  });
+
+  container.addEventListener('touchend', function(e) {
+    if (pressHoldTimer) {
+      clearTimeout(pressHoldTimer);
+      pressHoldTimer = null
+    }
+    if (isHolding) {
+      resetAutoTimer(); // Resume auto scroll
+    }
+  })
   
   const newContainer = container.cloneNode(true);
   container.parentNode?.replaceChild(newContainer, container);
@@ -217,7 +269,6 @@ function initStoryNavigation() {
 
 function showStory(index) {
   const cards = document.querySelectorAll('.story-card');
-  const bars = document.querySelectorAll('.story-progress .bar');
   
   if (cards.length === 0) return;
   if (index < 0) index = 0;
@@ -250,25 +301,7 @@ function showStory(index) {
     activeCard.style.display = '';
   }
   
-  // Update progress bars
-  bars.forEach((bar, i) => {
-    bar.classList.toggle('active', i === index);
-    const fill = bar.querySelector('.fill');
-    if (fill) {
-      if (i === index) {
-        fill.style.animation = 'none';
-        void fill.offsetHeight;
-        fill.style.animation = 'progressFill 5s linear forwards';
-        fill.style.width = '0%';
-      } else if (i < index) {
-        fill.style.animation = 'none';
-        fill.style.width = '100%';
-      } else {
-        fill.style.animation = 'none';
-        fill.style.width = '0%';
-      }
-    }
-  });
+
   
   state.currentStoryIndex = index;
   if (document.getElementById('home')?.classList.contains('active')) {

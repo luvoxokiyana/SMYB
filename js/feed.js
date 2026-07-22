@@ -2,22 +2,192 @@
 // FEED RENDERER
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// ✅ Feed mode state (MUST BE AT TOP)
+let feedMode = "for-you"; // 'for-you' or 'following'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HELPER FUNCTIONS FOR SMART FEED
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Shuffle array (Fisher-Yates)
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Calculate distance between two coordinates (Haversine formula)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SMART "FOR YOU" FEED
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function getForYouFeed(allPosts) {
+  const u = getUser();
+  
+  // Guest: show all posts in random order
+  if (!u || u.is_guest) {
+    return shuffleArray(allPosts);
+  }
+  
+  let scoredPosts = [];
+  let savedVenueIds = new Set();
+  
+  // Get user's saved venues
+  try {
+    const savedVenues = await fetchSavedVenues(u.id);
+    savedVenueIds = new Set(savedVenues.map(v => v.id));
+  } catch (e) {
+    console.warn('Could not fetch saved venues:', e);
+  }
+  
+  // Get user's following list
+  let followingIds = new Set();
+  try {
+    const following = await getFollowing(u.id);
+    followingIds = new Set(following.map(f => f.id));
+  } catch (e) {
+    console.warn('Could not fetch following:', e);
+  }
+  
+  for (const post of allPosts) {
+    let score = 0;
+    
+    // 1. Nearby (location-based)
+    if (post.venue_id) {
+      const venue = state.venues.find(v => v.id === post.venue_id);
+      if (venue && venue.latitude && venue.longitude && state.userLocation) {
+        const distance = calculateDistance(
+          state.userLocation.lat,
+          state.userLocation.lng,
+          venue.latitude,
+          venue.longitude
+        );
+        if (distance < 10) {
+          score += 10; // Very close
+        } else if (distance < 25) {
+          score += 5; // Nearby
+        }
+      }
+    }
+    
+    // 2. Saved venues (user has saved this venue)
+    if (post.venue_id && savedVenueIds.has(post.venue_id)) {
+      score += 8;
+    }
+    
+    // 3. Followed users
+    if (followingIds.has(post.user_id)) {
+      score += 10;
+    }
+    
+    // 4. Recently active (likes/comments)
+    const engagementScore = (post.likes_count || 0) + (post.comments_count || 0) * 2;
+    if (engagementScore > 10) {
+      score += 3;
+    }
+    
+    // 5. Random bonus (ensures variety, not just by date)
+    score += Math.random() * 2;
+    
+    scoredPosts.push({ ...post, score });
+  }
+  
+  // Sort by score (highest first)
+  scoredPosts.sort((a, b) => b.score - a.score);
+  
+  // Take top posts + some random ones for discovery
+  const topCount = Math.min(30, scoredPosts.length);
+  const topPosts = scoredPosts.slice(0, topCount);
+  const remaining = scoredPosts.slice(topCount);
+  const randomRemaining = shuffleArray(remaining).slice(0, 10);
+  
+  // Final list: top posts + random recommendations, shuffled
+  return shuffleArray([...topPosts, ...randomRemaining]);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOAD FEED (UPDATED)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 async function loadFeed(force = false) {
   const container = document.querySelector(".feed-container");
   if (!container) return;
 
   try {
     await fetchPosts(force);
-    if (state.posts.length === 0) {
-      showEmptyState();
+    let posts = state.posts;
+
+    if (feedMode === "following") {
+      // Following feed: only people you follow
+      const u = getUser();
+      if (u && !u.is_guest) {
+        const following = await getFollowing(u.id);
+        const followingIds = new Set(following.map((f) => f.id));
+        posts = posts.filter((p) => followingIds.has(p.user_id));
+        posts = shuffleArray(posts); // Random order
+      } else {
+        posts = [];
+        showToast("Sign in to see posts from people you follow", "info");
+      }
+    } else {
+      // "For You" feed: smart recommendations
+      posts = await getForYouFeed(posts);
+    }
+
+    if (posts.length === 0) {
+      showEmptyState(
+        feedMode === "following"
+          ? "No posts from people you follow yet"
+          : "No posts yet"
+      );
       return;
     }
-    renderStories(state.posts);
+
+    renderStories(posts);
   } catch (e) {
     console.error("Load feed error:", e);
     showEmptyState("Failed to load");
   }
 }
+
+// ─── Switch Feed Mode ───
+function switchFeedMode(mode) {
+  feedMode = mode;
+  loadFeed(true);
+
+  // Update tab UI
+  document.querySelectorAll(".feed-tab").forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.feed === mode);
+  });
+}
+
+// ─── Setup Feed Tabs ───
+function setupFeedTabs() {
+  document.querySelectorAll(".feed-tab").forEach((tab) => {
+    tab.addEventListener("click", function () {
+      const mode = this.dataset.feed;
+      switchFeedMode(mode);
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════
+// REST OF YOUR EXISTING CODE BELOW (showEmptyState, renderStories, createStoryCard, etc.)
+// ═══════════════════════════════════════════════
 
 function showEmptyState(msg = "No posts yet") {
   const container = document.querySelector(".feed-container");
@@ -36,7 +206,20 @@ function renderStories(postsData) {
   const container = document.querySelector(".feed-container");
   if (!container) return;
 
-  container.innerHTML = "";
+  // ✅ Remove only the story cards, not the tabs
+  const tabsWrapper = container.querySelector('.feed-tabs-wrapper');
+  
+  // Clear all children except tabs
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+  
+  // ✅ Re-add tabs if they existed
+  if (tabsWrapper) {
+    container.appendChild(tabsWrapper);
+  }
+
+  // Add story cards
   postsData.forEach((post, i) => {
     container.appendChild(createStoryCard(post, i, postsData));
   });
@@ -61,6 +244,9 @@ function createStoryCard(post, index, allPosts) {
   div.style.backgroundImage = `url(${post.image_url})`;
   div.style.backgroundSize = "cover";
   div.style.backgroundPosition = "center";
+  
+  // ✅ Add padding-top to make room for tabs (60px for tabs + 44px for status bar)
+  div.style.paddingTop = '60px';
 
   const initial = (post.poster_name || "A").charAt(0).toUpperCase();
   const venueName = post.venue || "Unknown venue";
@@ -70,17 +256,6 @@ function createStoryCard(post, index, allPosts) {
   const showFollowBtn = userId && userId !== currentUser?.id;
 
   div.innerHTML = `
-    <div class="story-progress">
-      ${allPosts
-        .map(
-          (_, i) => `
-        <div class="bar ${i === index ? "active" : ""}">
-          <div class="fill" ${i < index ? 'style="width:100%"' : ""}></div>
-        </div>
-      `,
-        )
-        .join("")}
-    </div>
     <div class="story-header">
       <div class="story-avatar" onclick="viewUserProfile('${userId}')" style="cursor:pointer;">${initial}</div>
       <div class="story-meta">
@@ -113,7 +288,7 @@ function createStoryCard(post, index, allPosts) {
         <i class="fa-regular fa-comment"></i>
         <span>${post.comments_count || 0}</span>
       </button>
-      <button class="action-btn share-btn" data-post-id="${post.id}">
+      <button class="action-btn share-btn" data-post-id="${post.id}" onclick="handleShare('${post.id}', event)">
         <i class="fa-regular fa-paper-plane"></i>
       </button>
     </div>
@@ -122,6 +297,68 @@ function createStoryCard(post, index, allPosts) {
     </div>
   `;
   return div;
+}
+
+async function handleShare(postId, event) {
+  event.stopPropagation();
+  const post = state.posts.find(x => x.id === postId);
+  if (!post) return;
+  
+  const u = getUser();
+  
+  if (!u || u.is_guest) {
+    showSignUpPopup(post);
+    return;
+  }
+  
+  sharePost(post);
+}
+
+function showSignUpPopup(post) {
+  const overlay = document.createElement('div');
+  overlay.className = 'signup-popup-overlay';
+  overlay.innerHTML = `
+    <div class="signup-popup">
+      <button class="signup-popup-close">&times;</button>
+      <span class="signup-popup-emoji">🍸</span>
+      <h3>Join Brev to Share!</h3>
+      <p>Sign up to share this post with your friends and discover the night.</p>
+      <div class="signup-popup-buttons">
+        <a href="/auth/signup" class="signup-popup-btn primary">Sign Up</a>
+        <a href="/auth/signin" class="signup-popup-btn secondary">Sign In</a>
+      </div>
+      <p class="signup-popup-skip" onclick="this.closest('.signup-popup-overlay').remove()">Skip for now</p>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  
+  overlay.querySelector('.signup-popup-close').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+}
+
+async function sharePost(post) {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Check out this post on Brev',
+        text: post.caption || 'Check out this venue!',
+        url: post.image_url
+      });
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error('Share error:', err);
+      }
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(post.image_url);
+      showToast('Link copied!', 'success');
+    } catch (err) {
+      showToast('Copy this: ' + post.image_url, 'info');
+    }
+  }
 }
 
 // Toggle follow from post
@@ -162,7 +399,6 @@ function setupCardActions(container) {
       const countSpan = this.querySelector("span");
       const wasLiked = icon.classList.contains("fa-solid");
 
-      // Optimistic update
       if (wasLiked) {
         icon.className = "fa-regular fa-heart";
         icon.style.color = "";
@@ -273,3 +509,8 @@ function setupCardActions(container) {
     });
   });
 }
+
+
+window.setupFeedTabs = setupFeedTabs;
+window.switchFeedMode = switchFeedMode;
+window.loadFeed = loadFeed;

@@ -1,18 +1,18 @@
 /* ────────── HOME PAGE ────────── */
-#home {
-  padding: 0;
-}
-
 #home .status-bar-fake {
   display: none;
 }
 
 .feed-container {
-  width: 100%;
-  height: 100%;
+  flex: 1;
   position: relative;
   overflow: hidden;
-  touch-action: pan-y;
+}
+#home {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  height: 100%;
 }
 
 /* ────────── STORY CARDS ────────── */
@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 48px 20px 130px;
+  padding: 70px 20px 130px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -53,43 +53,6 @@
   z-index: 2;
 }
 
-/* ────────── STORY PROGRESS ────────── */
-.story-progress {
-  position: absolute;
-  top: 44px;
-  left: 12px;
-  right: 12px;
-  display: flex;
-  gap: 4px;
-  z-index: 5;
-}
-
-.story-progress .bar {
-  flex: 1;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.story-progress .bar .fill {
-  height: 100%;
-  width: 0%;
-  background: var(--white);
-  border-radius: 4px;
-  transition: none;
-}
-
-/* ✅ Active bar animation */
-.story-progress .bar.active .fill {
-  width: 100%;
-  animation: progressFill 5s linear forwards;
-}
-
-@keyframes progressFill {
-  from { width: 0%; }
-  to { width: 100%; }
-}
 
 /* ────────── STORY HEADER ────────── */
 .story-header {
@@ -532,3 +495,62 @@
 .follow-btn-mini:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+.follow-btn-mini.following {
+  background: rgba(255, 255, 255, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.follow-btn-mini.following:hover {
+  background: rgba(255, 68, 68, 0.2);
+  color: #ff4444;
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+/* ────────── FEED TABS (Overlay on Image) ────────── */
+.feed-tabs-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 8px;
+  z-index: 10;
+  background: transparent;
+}
+
+.feed-tabs-pill {
+  display: flex;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 30px;
+  padding: 4px;
+  gap: 2px;
+  pointer-events: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feed-tab {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 26px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 101;
+}
+
+.feed-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.feed-tab.active {
+  background: #1e2f6b;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(30, 47, 107, 0.3);
+}
+

@@ -506,14 +506,12 @@ async function toggleFollowFromPost(targetUserId, btn) {
   const result = await toggleFollowUser(targetUserId);
   
   if (result.following) {
-    btn.textContent = '✓ Following';
-    btn.style.background = 'rgba(255,255,255,0.15)';
-    btn.style.color = '#4ade80';
+    btn.textContent = 'Following';
+    btn.classList.add('following');
     showToast('Followed!', 'success');
   } else if (result.following === false && !result.error) {
     btn.textContent = 'Follow';
-    btn.style.background = '';
-    btn.style.color = '';
+    btn.classList.remove('following');
     showToast('Unfollowed', 'info');
   }
 }

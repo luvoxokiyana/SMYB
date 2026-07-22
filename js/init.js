@@ -258,6 +258,7 @@ async function init() {
     setupProfileTabs();
     setupModalKeyboardNavigation();
     setupSearchTabs();
+    setupFeedTabs();
     
     document.getElementById('editProfileCancel')?.addEventListener('click', closeEditProfile);
     document.getElementById('saveProfileBtn')?.addEventListener('click', saveProfile);

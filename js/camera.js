@@ -206,8 +206,9 @@ async function flipCamera() {
     state.cameraStream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: state.facingMode,
-        width: { ideal: 1080 },
-        height: { ideal: 1920 }
+        width: { ideal: 3840, max: 4096 },
+        height: { ideal: 2160, max: 2160 },
+        frameRate: { ideal: 30, max: 60 } 
       },
       audio: false
     });
