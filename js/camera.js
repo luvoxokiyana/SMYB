@@ -21,22 +21,40 @@ async function openCamera() {
   document.body.style.overflow = 'hidden';
   
   try {
-    state.cameraStream = await navigator.mediaDevices.getUserMedia({
+    // ✅ Get the best possible quality from the device
+    const constraints = {
       video: {
         facingMode: state.facingMode,
-        width: { ideal: 1080 },
-        height: { ideal: 1920 }
+        width: { ideal: 3840, max: 4096 },
+        height: { ideal: 2160, max: 2160 },
+        frameRate: { ideal: 30, max: 60 }
       },
       audio: false
+    };
+    
+    console.log('📸 Requesting camera with constraints:', constraints);
+    
+    state.cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+    
+    // ✅ Log the actual resolution being used
+    const track = state.cameraStream.getVideoTracks()[0];
+    const settings = track.getSettings();
+    console.log('📸 Camera active:', {
+      width: settings.width,
+      height: settings.height,
+      frameRate: settings.frameRate,
+      facingMode: settings.facingMode
     });
+    
     video.srcObject = state.cameraStream;
     video.style.display = 'block';
     preview.style.display = 'none';
     state.capturedImageData = null;
     document.getElementById('cameraCapture')?.classList.remove('recording');
-  } catch (e) {
+    
+  } catch(e) {
     console.error('Camera error:', e);
-    showToast('Camera access denied. Use gallery instead.', 'error');
+    showToast('Camera access denied. Use gallery instead', 'error');
     setTimeout(() => {
       const galleryInput = document.getElementById('galleryInput');
       if (galleryInput) galleryInput.click();
@@ -70,38 +88,37 @@ function closeCamera() {
 async function capturePhoto() {
   const video = document.getElementById('cameraFeed');
   const preview = document.getElementById('cameraPreview');
-  const canvas = document.createElement('canvas');
   
-  let w = video.videoWidth || 1080;
-  let h = video.videoHeight || 1920;
-  const ratio = 9 / 16;
-  const cur = w / h;
-  
-  if (cur > ratio) {
-    const nw = h * ratio;
-    const ox = (w - nw) / 2;
-    canvas.width = nw;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    if (state.facingMode === 'user') {
-      ctx.translate(nw, 0);
-      ctx.scale(-1, 1);
-    }
-    ctx.drawImage(video, ox, 0, nw, h, 0, 0, nw, h);
-  } else {
-    const nh = w / ratio;
-    const oy = (h - nh) / 2;
-    canvas.width = w;
-    canvas.height = nh;
-    const ctx = canvas.getContext('2d');
-    if (state.facingMode === 'user') {
-      ctx.translate(w, 0);
-      ctx.scale(-1, 1);
-    }
-    ctx.drawImage(video, 0, oy, w, nh, 0, 0, w, nh);
+  if (!video || !video.videoWidth) {
+    showToast('Camera not ready', 'error');
+    return;
   }
   
-  state.capturedImageData = canvas.toDataURL('image/jpeg', 0.85);
+  // ✅ Use the video's actual resolution
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+  
+  console.log('📸 Capturing at resolution:', width, 'x', height);
+  
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  
+  const ctx = canvas.getContext('2d');
+  
+  // ✅ Mirror for front camera
+  if (state.facingMode === 'user') {
+    ctx.translate(width, 0);
+    ctx.scale(-1, 1);
+  }
+  
+  // ✅ Draw the full resolution image
+  ctx.drawImage(video, 0, 0, width, height);
+  
+  // ✅ Convert to JPEG with high quality (0.92)
+  state.capturedImageData = canvas.toDataURL('image/jpeg', 0.92);
+  
+  console.log('📸 Captured image length:', state.capturedImageData?.length);
   
   if (state.cameraStream) {
     state.cameraStream.getTracks().forEach(t => t.stop());
@@ -207,14 +224,18 @@ async function uploadToCloudinary(imageData) {
     return imageData;
   }
   
-  console.log('Uploading to Cloudinary...');
-  const response = await fetch(imageData);
-  const blob = await response.blob();
+  console.log('📤 Uploading to Cloudinary...');
+  
+  // ✅ Convert data URI to Blob without fetch
+  const blob = dataURItoBlob(imageData);
   
   const formData = new FormData();
   formData.append('file', blob, `brev-${Date.now()}.jpg`);
   formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
   formData.append('folder', 'brev_posts');
+  
+  // ✅ Add quality settings for Cloudinary
+  // Cloudinary will optimize automatically
   
   const uploadRes = await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -227,6 +248,18 @@ async function uploadToCloudinary(imageData) {
     throw new Error(data.error?.message || 'Upload failed');
   }
   
-  console.log('Uploaded:', data.secure_url);
+  console.log('📤 Uploaded:', data.secure_url);
   return data.secure_url;
+}
+
+// ✅ Helper: Convert data URI to Blob
+function dataURItoBlob(dataURI) {
+  const parts = dataURI.split(',');
+  const mimeType = parts[0].match(/:(.*?);/)[1];
+  const byteString = atob(parts[1]);
+  const byteArray = new Uint8Array(byteString.length);
+  for (let i = 0; i < byteString.length; i++) {
+    byteArray[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([byteArray], { type: mimeType });
 }
