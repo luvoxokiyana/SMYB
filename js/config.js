@@ -17,7 +17,18 @@ const CLOUDINARY_UPLOAD_PRESET = CONFIG.CLOUDINARY_UPLOAD_PRESET;
 // File upload config
 const FILE_UPLOAD_CONFIG = {
   maxSize: 10 * 1024 * 1024,
-  allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/heic'],
+  allowedTypes: [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+    'image/heic',
+    'image/heif',
+    'image/gif',
+    'image/bmp',
+    'image/tiff',
+    'image/svg+xml'
+  ],
   maxWidth: 4096,
   maxHeight: 4096,
 };

@@ -3,21 +3,64 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 function openPostPreview(imageData) {
-  if (state.cameraStream) {
-    state.cameraStream.getTracks().forEach(t => t.stop());
-    state.cameraStream = null;
+  console.log('=== OPEN POST PREVIEW DEBUG ===');
+  console.log('1. imageData type:', typeof imageData);
+  console.log('2. imageData is null?', imageData === null);
+  console.log('3. imageData is undefined?', imageData === undefined);
+  console.log('4. imageData length:', imageData?.length);
+  console.log('5. imageData first 100 chars:', imageData?.substring(0, 100));
+  console.log('6. Does it start with data:image?', imageData?.startsWith('data:image/'));
+  console.log('================================');
+  
+  // ✅ Check if imageData is valid
+  if (!imageData || imageData === null) {
+    console.error('❌ Invalid image data, trying state.capturedImageData');
+    if (state.capturedImageData) {
+      imageData = state.capturedImageData;
+      console.log('✅ Using state.capturedImageData, length:', imageData.length);
+    } else {
+      showToast('No image to preview', 'error');
+      return;
+    }
   }
   
+  // ✅ Declare elements FIRST
   const modal = document.getElementById('previewModal');
+  const previewImage = document.getElementById('previewImage');
   const container = document.getElementById('previewContainer');
   
-  document.getElementById('previewImage').style.backgroundImage = `url(${imageData})`;
-  document.getElementById('previewCaption').value = '';
-  document.getElementById('previewVenue').value = '';
-  document.getElementById('previewCharCount').textContent = '0';
+  // ✅ Check if elements exist
+  if (!modal) {
+    console.error('❌ previewModal not found!');
+    showToast('Preview error', 'error');
+    return;
+  }
+  
+  if (!previewImage) {
+    console.error('❌ previewImage not found!');
+    showToast('Preview error', 'error');
+    return;
+  }
+  
+  // ✅ Set the background image
+  previewImage.style.backgroundImage = `url('${imageData}')`;
+  previewImage.style.backgroundSize = 'cover';
+  previewImage.style.backgroundPosition = 'center';
+  previewImage.style.backgroundColor = '#000';
+  
+  // ✅ Reset form fields
+  const captionInput = document.getElementById('previewCaption');
+  const venueInput = document.getElementById('previewVenue');
+  const charCount = document.getElementById('previewCharCount');
+  
+  if (captionInput) captionInput.value = '';
+  if (venueInput) venueInput.value = '';
+  if (charCount) charCount.textContent = '0';
+  
   state.selectedVenueId = null;
   state.selectedVenue = null;
   
+  // ✅ Set user name
   const u = getUser();
   const nameInput = document.getElementById('previewName');
   if (nameInput && u) {
@@ -25,15 +68,18 @@ function openPostPreview(imageData) {
     nameInput.value = p.full_name || p.username || u.email?.split('@')[0] || '';
   }
   
+  // ✅ Reset container transform
   if (container) {
     container.style.transform = '';
     container.style.transition = '';
   }
   
+  // ✅ Show modal
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   modal.dataset.imageData = imageData;
   
+  // ✅ Handle swipe overlay
   const overlay = document.querySelector('.swipe-overlay');
   if (overlay) {
     overlay.classList.remove('fading');

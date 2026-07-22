@@ -70,24 +70,49 @@ function validateFile(file) {
 }
 
 function compressImage(file, maxW = 1080, q = 0.8) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = e => {
+
+    reader.onload = (e) => {
       const img = new Image();
+
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
+        const canvas = document.createElement("canvas");
+        let w = img.width;
+        let h = img.height;
+
         if (w > maxW) {
           h = (maxW / w) * h;
           w = maxW;
         }
+
         canvas.width = w;
         canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', q));
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", q);
+
+        if (!dataUrl || !dataUrl.startsWith("data:image/")) {
+          reject(new Error("Compression failed: invalid image data"));
+          return;
+        }
+
+        resolve(dataUrl);
       };
+
+      img.onerror = () => {
+        reject(new Error("Failed to load image for compression"));
+      };
+
       img.src = e.target.result;
     };
+
+    reader.onerror = () => {
+      reject(new Error("Failed to read file"));
+    };
+
     reader.readAsDataURL(file);
   });
 }

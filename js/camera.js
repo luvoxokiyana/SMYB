@@ -64,7 +64,7 @@ function closeCamera() {
   modal.classList.remove('active');
   document.body.style.overflow = '';
   document.getElementById('cameraCapture')?.classList.remove('recording');
-  state.capturedImageData = null;
+  
 }
 
 async function capturePhoto() {
@@ -128,19 +128,50 @@ async function handleGallerySelect(e) {
   const file = e.target.files[0];
   if (!file) return;
   
+  console.log('📷 File selected:', file.name, file.type, file.size);
+  
   try {
     await validateFile(file);
-    if (state.cameraStream) {
-      state.cameraStream.getTracks().forEach(t => t.stop());
-      state.cameraStream = null;
-    }
-    const compressed = await compressImage(file);
-    state.capturedImageData = compressed;
-    closeCamera();
-    setTimeout(() => openPostPreview(state.capturedImageData), 300);
+    
+    // Don't stop camera stream yet - we'll do it after
+    // if (state.cameraStream) {
+    //   state.cameraStream.getTracks().forEach(t => t.stop());
+    //   state.cameraStream = null;
+    // }
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(event) {
+      const imageData = event.target.result;
+      console.log(' FileReader result length:', imageData.length);
+      
+      //  STORE the image data
+      state.capturedImageData = imageData;
+      
+      //  Close camera AFTER storing
+      if (state.cameraStream) {
+        state.cameraStream.getTracks().forEach(t => t.stop());
+        state.cameraStream = null;
+      }
+      
+      closeCamera(); // This should NOT clear the image data
+      
+      //  Use the stored data
+      console.log(' Calling openPostPreview with state.capturedImageData');
+      openPostPreview(state.capturedImageData);
+    };
+    
+    reader.onerror = function(error) {
+      console.error(' FileReader error:', error);
+      showToast('Failed to read file', 'error');
+    };
+    
+    reader.readAsDataURL(file);
     e.target.value = '';
+    
   } catch (error) {
-    showToast(error.message, 'error');
+    console.error(' Gallery error:', error);
+    showToast(error.message || 'Failed to select image', 'error');
     e.target.value = '';
   }
 }
